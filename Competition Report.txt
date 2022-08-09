@@ -1,0 +1,67 @@
+CSCI590 Deep Learning Competition Fall 2021
+
+Problem: DNA barcode sequencing
+
+These are the following methods I have tried.
+
+1. Word embedding + Conv1D + FFNN (Accuracy 96%)
+Description:
+    i) I first removed all non A C G T characters from sequences. Then I tried splitting dna sequences into 4-mers and then feed into tf.keras.layers.Embedding to create fixed size vectors for each unique 4-mers. Then I feed these vectors into 3 conv1D followed by 3 dense layers.I got accuracy of 86%. Please check the following:
+     - Submission3_dna_barcode_sequencing_word_embedding_seq_split_cnn.ipynb
+
+    ii) This time I did not remove any characters. Longest DNA sequence in the training  is 1058. I tried padding to 1058 for all DNA sequences in the training data. Then I truncated all DNA sequences to length 750. I created 4-mers with stride 1 and created tokens. Embedding dimension 100. I fed Embedding vectors in 3 Conv1D + 2 Dense layers. After each layer I have used BatchNormalization and Dropout. On validation data I got accuracy of 97%. Please check the following:
+     - Submission4_dna_barcode_sequencing_word_embedding_seq_stride1_4mers_cnn.ipynb
+
+    iii) I repeated experiment for 4-mers but with embedding dim 250. Please check the following:
+     - Submission6_dna_barcode_sequencing_word_embedding250_seq_stride1_4mers_cnn.ipynb
+
+    iv) I also tried 6-mers and got similar accuracy on validation data. Please check the following:
+     - Submission5_dna_barcode_sequencing_word_embedding_seq_stride1_6mers_cnn.ipynb
+
+    v) I could create word embeddding using gensim library. When I fed these vectors into CNN training started but it could not calculate loss. I am sharing the code here. Please check the following:
+     - Submission15_gensim_embedding.ipynb
+
+2. One hot encoding + Conv2D + FFNN (Accuracy 95%)
+Description:
+   i) Longest DNA sequence in the training  is 1058. I tried padding to 1058 for all DNA sequences in the training and test dataset. I have tried 3 conv2D layers with 3 dense layers. I got improved accuracy with 3 conv2D layers followed by 2 dense layers. Please check the following:
+      - Submission1_dna_barcode_sequencing_one_hot_encoding_padding_len1058_CNN.ipynb
+
+   ii) I truncated DNA sequences to a smaller length and performed experimentation. I implemented random shuffle of the training dataset and calculate weights of different species in the dataset. I have also implemented callback function using ModelCheckpoint to save the model weights when validation loss is lowest during training. I kept the truncated dna seq length to 750. I also tried len 650. After each layer I have used BatchNormalization and Dropout. On validation data I got accuracy of 97%. Please check the following:
+      - Submission2_dna_barcode_sequencing_one_hot_encoding_CNN.ipynb
+
+3. One-hot-encoding + VAE + Logistic Regression/Random Forest/Feedforward Neural Network
+Description:
+    i) I have trained VAE with train and test features to create 50 dim embedding. I ran experiment for 200 epochs. I trained a Logistic Regression model with these embeddings and labels. Then I used this model to classify test data. I got accuracy score 95%. Please check the following:
+       - Submission7_dna_barcode_sequence_vae_and_logistic_regression.ipynb
+
+    ii) Previousy I trained CVAE with train and test features to create 50 dim embedding. The embeddings came similar to what I got with VAE. I ran experiment for 50 epochs. I trained a Random Forest model with these embeddings and labels. Then I used this model to do croos-validation test. Accuracy is 92% on validation data. Please check the following:
+       - Submission8_cvae_dna_barcode_sequencing_embedding50dim_RF_classifier.ipynb
+
+    iii) I have tried VAE embeddings with 5 layers Feedforward Neural Network.I got accuracy 94% on validation data. Please check the following:
+       - Submission9_dna_barcode_sequence_vae_and_NN.ipynb
+
+4. One-hot-encoding + VAE + Mahalanobis distance for outlier detection
+Description:
+    I have use VAE embeddings to find mahalanobis distance each test sequences. For each test seq embedding I calculated mahalanobis distance from each species mean based on training data. Then I set a threshold 110. If the lowest distance for a test seq from all species means is greater than 110 then test seq is an outlier and I set its prediction to -1. Please check the following:
+       - Submission10_dna_barcode_sequence_vae_and_mahalanobis_distance.ipynb
+
+5. Word embedding + LSTM + FFNN (Accuracy 89%):
+Description:
+    LSTM is very popular for sequence data classification. I tried using LSTM layer on word embedding. I kept embedding vector size 100. DNA sequences are padded and then truncated after length 650. I tried splitting dna sequences into 4-mers and then feed into tf.keras.layers.Embedding to create fixed size vectors for each unique 4-mers. I feed Embedding vectors in an LSTM layer with memory size 100. This is followed by 2 Dense layers. I got accuracy 89% on validation data. Please check the following:
+      - Submission11_dna_barcode_sequencing_word_embedding_LSTM.ipynb
+
+6. FFNN
+Description:
+    i) Using one-hot-encoding as input (accuracy 95%)
+       DNA sequences are padded and then truncated after length 650. I first tried 3 dense layers. I got accuracy of 95% on validation data. I then tried 5 dense layers. I got accuracy of 95% on validation data. Please check the following:
+      - Submission12_dna_barcode_sequencing_one_hot_encoding_nn.ipynb
+    ii) Using word embedding as input (accuracy 96%)
+       I kept embedding vector size 100. DNA sequences are padded and then truncated after length 650. I tried splitting dna sequences into 4-mers and then feed into tf.keras.layers.Embedding to create fixed size vectors for each unique 4-mers. I fed Embedding vectors (dim 100) into 3 dense layers. I got accuracy of 96% on validation data. Please check the following:
+      - Submission13_dna_barcode_sequencing_word_embedding_NN.ipynb
+
+7. Word embedding + CNN + LSTM + FFNN (Accuracy 94%):
+Description:
+     I tried feeding word embedding same as in bullet 5 in CNN layer first before feeding into LSTM layer. I got accuracy of 94% on validation data. Please check the following:
+      - Submission14_dna_barcode_sequencing_word_embedding_CNN_LSTM.ipynb
+
+8. 
