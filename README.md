@@ -1,4 +1,4 @@
-# Classify-DNA-Barcode-Sequences-using-Deep_Learning
+# Classify-DNA-Barcode-Sequences-using-Deep-Learning
 
 In this competition I have to design deep learning algorithms to classify dna barcode sequences.
 
